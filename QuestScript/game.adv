@@ -1,5 +1,6 @@
-// Simple escape room logic in QuestScript [cite: 22]
+// Simple escape room logic in QuestScript 
 var has_key = false;
+
 
 scene start {
     print("You wake up in a dark room.");
