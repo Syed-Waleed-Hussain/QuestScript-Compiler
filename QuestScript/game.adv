@@ -1,0 +1,24 @@
+// Simple escape room logic in QuestScript [cite: 22]
+var has_key = false;
+
+scene start {
+    print("You wake up in a dark room.");
+    choice "Search the floor" -> find_key;
+    choice "Try the door" -> check_door;
+}
+
+scene find_key {
+    set has_key = true;
+    print("You found a rusty key!");
+    goto start;
+}
+
+scene check_door {
+    if has_key == true {
+        print("Door unlocked. You escaped!");
+        end;
+    } else {
+        print("The door is locked.");
+        goto start;
+    }
+}
