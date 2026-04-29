@@ -3,7 +3,7 @@ import sys
 
 # Token definitions 
 TOKEN_SPECIFICATION = [
-    ('COMMENT',  r'//.*'),                   # Single-line comments
+    ('COMMENT',  r'//.*'),                   # Single-line  comments
     ('KEYWORD',  r'\b(scene|choice|var|if|else|goto|print|end|set|true|false)\b'), 
     ('NUMBER',   r'\d+'),                    # Integer literals
     ('ID',       r'[a-zA-Z_][a-zA-Z0-9_]*'), # Identifiers (variables/scene names)
