@@ -40,8 +40,7 @@ def main():
         
         tokens = tokenize(code)
         print("\n--- Phase 1: Lexical Analysis (Tokens) ---")
-        for t in tokens:
-            print(t)
+        
         
         parser = Parser(tokens)
         ast = parser.parse_program()
