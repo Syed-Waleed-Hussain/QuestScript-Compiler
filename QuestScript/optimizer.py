@@ -1,3 +1,6 @@
+class Optimizer:
+    def __init__(self, ast):
+        self.ast = ast
 
     def optimize(self):
         print("\n--- Phase 3.5: Optimization ---")
