@@ -1,5 +1,4 @@
 import sys
-
 class Parser:
     def __init__(self, tokens):
         self.tokens = tokens
@@ -15,6 +14,7 @@ class Parser:
     def peek(self, ttype):
         return self.pos < len(self.tokens) and self.tokens[self.pos].type == ttype
 
+    
     def error(self, msg):
         token = self.tokens[self.pos] if self.pos < len(self.tokens) else self.tokens[-1]
         raise Exception(f"{msg} at line {token.line}, column {token.column}")
