@@ -26,6 +26,7 @@
 
 **QuestScript** is a custom-designed, domain-specific programming language (DSL) built exclusively for authoring interactive text-adventure games. The project implements a **complete five-phase compiler pipeline** — from raw source text all the way through to interactive game execution — entirely in Python, with no third-party compiler frameworks (e.g., ANTLR, PLY) used.
 
+
 The compiler follows the classical textbook model:
 
 ```
