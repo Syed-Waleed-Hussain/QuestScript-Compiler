@@ -2,7 +2,6 @@
    QuestScript IDE — styles.css
    Dark IDE + retro text-adventure aesthetic
    ═══════════════════════════════════════════════════ */
-
 /* ─── Design Tokens ─── */
 :root {
   --bg-base:        #0d0f14;
@@ -18,7 +17,6 @@
   --text-secondary: #7a8aaa;
   --text-muted:     #4a5470;
   --text-code:      #cdd6f4;
-
   /* accent palette */
   --accent:         #7c6af7;
   --accent-glow:    rgba(124,106,247,0.25);
@@ -27,7 +25,6 @@
   --accent-3:       #f7b155;
   --danger:         #f06f6f;
   --success:        #56cfb2;
-
   /* token colors */
   --col-keyword:    #bd93f9;
   --col-string:     #f1fa8c;
