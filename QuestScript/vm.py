@@ -4,7 +4,6 @@ class VirtualMachine:
         self.variables = {}
         self.scenes = {}
         self.current_scene = None
-
     def setup(self):
         # Initialize variables and map out scenes
         for node in self.ast['body']:
@@ -12,7 +11,6 @@ class VirtualMachine:
                 self.variables[node['name']] = node['value']
             elif node['type'] == 'SceneNode':
                 self.scenes[node['name']] = node
-        
         # Set initial state
         if 'start' in self.scenes:
             self.current_scene = 'start'
