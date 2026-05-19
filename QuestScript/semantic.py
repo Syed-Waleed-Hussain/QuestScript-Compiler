@@ -21,7 +21,6 @@ class SemanticAnalyzer:
             elif node['type'] == 'SceneNode':
                 print(f"    - Checking statements in scene: '{node['name']}'")
                 self.check_statements(node['statements'])
-        
         return self.ast
 
     def check_statements(self, statements):
@@ -33,7 +32,6 @@ class SemanticAnalyzer:
             elif stmt['type'] == 'SetNode':
                 if stmt['variable'] not in self.symbol_table:
                     raise Exception(f"Semantic Error: Variable '{stmt['variable']}' not declared")
-            
             if 'if_body' in stmt:
                 self.check_statements(stmt['if_body'])
             if 'else_body' in stmt:
