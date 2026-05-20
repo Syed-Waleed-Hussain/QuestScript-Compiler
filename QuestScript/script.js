@@ -3,6 +3,7 @@
  * Handles: SSE streaming, log colorization, AST parsing & D3 rendering,
  *           game input/output, tab switching, resize handle.
  */
+
 // ═══════════════════════════════════════════════════════
 // 1. DOM REFERENCES
 // ═══════════════════════════════════════════════════════
@@ -38,7 +39,6 @@ const gameStatusR   = document.getElementById('game-status-right');
 const resizeHandle  = document.getElementById('resize-handle');
 const panelLeft     = document.getElementById('panel-left');
 const workspace     = document.getElementById('workspace');
-
 // ═══════════════════════════════════════════════════════
 // 2. STATE
 // ═══════════════════════════════════════════════════════
