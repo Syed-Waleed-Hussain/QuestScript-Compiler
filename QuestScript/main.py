@@ -4,6 +4,7 @@ from vm import VirtualMachine
 import sys
 from lexer import tokenize
 from parser import Parser
+
 def print_tree(data, indent=0):
     spacing = "  " * indent
     if isinstance(data, list):
