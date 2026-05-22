@@ -4,6 +4,7 @@ class SemanticAnalyzer:
         self.symbol_table = {}
         self.scenes = set()
 
+    
     def analyze(self):
         print("  [Step 1] Scanning for scenes...")
         for node in self.ast['body']:
@@ -23,6 +24,7 @@ class SemanticAnalyzer:
                 self.check_statements(node['statements'])
         return self.ast
 
+    
     def check_statements(self, statements):
         for stmt in statements:
             if stmt['type'] in ['GotoNode', 'ChoiceNode']:
