@@ -23,6 +23,7 @@ def print_tree(data, indent=0):
             else:
                 print(f"{spacing}  - {key}: {value}")
 
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python main.py <filename.adv>")
@@ -60,7 +61,6 @@ def main():
         print("\n--- Phase 4: Code Generation (Virtual Machine) ---")
         vm = VirtualMachine(optimized_ast)
         vm.run()
-
     except Exception as e:
         print(f"\n--- Compilation Error ---")
         print(f"Message: {e}")
