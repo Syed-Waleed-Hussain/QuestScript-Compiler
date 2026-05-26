@@ -23,7 +23,6 @@ TOKEN_SPECIFICATION = [
 ]
 
 MASTER_REGEX = '|'.join(f'(?P<{name}>{pattern})' for name, pattern in TOKEN_SPECIFICATION)
-
 class Token:
     def __init__(self, type, value, line, column):
         self.type = type
@@ -33,7 +32,6 @@ class Token:
 
     def __repr__(self):
         return f"Token({self.type}, {repr(self.value)}, Line: {self.line}, Col: {self.column})"
-
 def tokenize(code):
     line_num = 1
     line_start = 0
