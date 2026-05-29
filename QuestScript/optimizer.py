@@ -8,9 +8,7 @@ class Optimizer:
         if not scenes:
             return self.ast
         
-        # ====================================================
         # OPTIMIZATION 1: DEAD CODE ELIMINATION
-        # ====================================================
         start_scene = 'start' if 'start' in scenes else list(scenes.keys())[0]
         reachable = set()
     
@@ -52,9 +50,7 @@ class Optimizer:
             print("  [+] Dead Code Elimination: No dead scenes found.")
 
 
-        # ====================================================
         # OPTIMIZATION 2: PEEPHOLE OPTIMIZATION
-        # ====================================================
         def merge_prints(statements):
             optimized_stmts = []
             i = 0
