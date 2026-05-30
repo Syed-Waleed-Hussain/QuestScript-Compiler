@@ -14,7 +14,6 @@ class Parser:
     def peek(self, ttype):
         return self.pos < len(self.tokens) and self.tokens[self.pos].type == ttype
 
-    
     def error(self, msg):
         token = self.tokens[self.pos] if self.pos < len(self.tokens) else self.tokens[-1]
         raise Exception(f"{msg} at line {token.line}, column {token.column}")
@@ -36,7 +35,6 @@ class Parser:
         name = self.match('ID')
         if not name: self.error("Expected variable name")
         self.match('ASSIGN')
-        # Value can be String, Number, or Boolean 
         val = self.tokens[self.pos].value
         self.pos += 1
         self.match('SEMI')
