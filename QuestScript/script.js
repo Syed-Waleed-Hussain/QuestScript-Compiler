@@ -1,12 +1,5 @@
-/**
- * script.js — QuestScript Web UI
- * Handles: SSE streaming, log colorization, AST parsing & D3 rendering,
- *           game input/output, tab switching, resize handle.
- */
 
-// ═══════════════════════════════════════════════════════
 // 1. DOM REFERENCES
-// ═══════════════════════════════════════════════════════
 const btnRun        = document.getElementById('btn-run');
 const btnStop       = document.getElementById('btn-stop');
 const btnClearLogs  = document.getElementById('btn-clear-logs');
@@ -39,9 +32,7 @@ const gameStatusR   = document.getElementById('game-status-right');
 const resizeHandle  = document.getElementById('resize-handle');
 const panelLeft     = document.getElementById('panel-left');
 const workspace     = document.getElementById('workspace');
-// ═══════════════════════════════════════════════════════
 // 2. STATE
-// ═══════════════════════════════════════════════════════
 let eventSource     = null;
 let astData         = null;   // parsed hierarchical AST for D3
 let d3Zoom          = null;   // D3 zoom behaviour reference
@@ -52,9 +43,7 @@ const SECTION = { NONE: 0, PHASE1: 1, PHASE2: 2, PHASE3: 3, PHASE35: 4, PHASE4: 
 let currentSection  = SECTION.NONE;
 let astLines        = [];     // raw lines from Phase 2
 
-// ═══════════════════════════════════════════════════════
 // 3. STATUS HELPERS
-// ═══════════════════════════════════════════════════════
 function setStatus(state, label) {
   statusPill.className = 'status-pill ' + state;
   statusText.textContent = label;
@@ -66,9 +55,7 @@ function setGameBadge(state) {
   gameBadge.textContent = map[state] ?? state.toUpperCase();
 }
 
-// ═══════════════════════════════════════════════════════
 // 4. TAB SWITCHING
-// ═══════════════════════════════════════════════════════
 function switchTab(tab) {
   if (tab === 'logs') {
     tabLogs.classList.add('active');   tabLogs.setAttribute('aria-selected','true');
@@ -88,9 +75,7 @@ function switchTab(tab) {
 tabLogs.addEventListener('click', () => switchTab('logs'));
 tabAst.addEventListener('click',  () => switchTab('ast'));
 
-// ═══════════════════════════════════════════════════════
 // 5. LOG OUTPUT COLORIZATION
-// ═══════════════════════════════════════════════════════
 function colorizeLogLine(raw) {
   const line = document.createElement('span');
   line.className = 'log-line';
@@ -167,9 +152,7 @@ function appendLog(raw) {
   logOutput.scrollTop = logOutput.scrollHeight;
 }
 
-// ═══════════════════════════════════════════════════════
 // 6. GAME OUTPUT HELPERS
-// ═══════════════════════════════════════════════════════
 function clearGameWelcome() {
   const w = gameOutput.querySelector('.game-welcome');
   if (w) w.remove();
@@ -216,9 +199,7 @@ function appendGame(raw) {
   gameOutput.scrollTop = gameOutput.scrollHeight;
 }
 
-// ═══════════════════════════════════════════════════════
 // 7. SECTION ROUTER — decides where each line goes
-// ═══════════════════════════════════════════════════════
 function routeLine(raw) {
   const t = raw.trim();
   const prevSection = currentSection;
@@ -252,41 +233,26 @@ function routeLine(raw) {
     astLines.push(raw);
   }
 
-  // When Phase 2 just ended (we moved to Phase 3), trigger AST render immediately
   if (prevSection === SECTION.PHASE2 && currentSection !== SECTION.PHASE2 && astLines.length) {
     astData = parseASTText(astLines);
     if (astData) {
-      // Render immediately if AST tab is active, otherwise it will render on tab click
       if (tabAst.classList.contains('active')) {
         renderAST(astData);
       }
-      // Auto-switch to AST tab after a short delay so user sees the tree
       setTimeout(() => {
         if (tabLogs.classList.contains('active')) switchTab('ast');
       }, 800);
     }
   }
 
-  // Send game lines to the game panel
   if (currentSection === SECTION.GAME) {
     appendGame(raw);
   }
 }
 
-// ═══════════════════════════════════════════════════════
 // 8. AST TEXT PARSER → Hierarchy
-// ═══════════════════════════════════════════════════════
-/*
-  Converts the indented text output from print_tree() into a D3-ready
-  hierarchical object.  Strategy:
-    - "node: X"   → new node with type X
-    - "[key]"     → label for the next group of children
-    - "  - k: v"  → property on the current node
-    - "  - v"     → bare value child
-*/
+
 function parseASTText(lines) {
-  // `astLines` is already collected only during PHASE2, so every line here
-  // belongs to Phase 2. We just strip the section-header and blank lines.
   const block = lines.filter(l => {
     const t = l.trim();
     return t !== '' && !/^---/.test(t) && !/Phase 2/i.test(t);
@@ -306,7 +272,7 @@ function parseASTText(lines) {
   }
 
   let root = null;
-  const stack = []; // { node, ind }
+  const stack = []; 
 
   function getParent(currentInd) {
     while (stack.length > 1 && stack[stack.length - 1].ind >= currentInd) {
@@ -325,9 +291,8 @@ function parseASTText(lines) {
     if (nodeMatch) {
       const newNode = { name: nodeMatch[1], type: nodeMatch[1], children: [], props: {} };
       if (!root) {
-        // First node becomes the root — avoids a synthetic duplicate wrapper
         root = newNode;
-        stack.push({ node: root, ind: -2 }); // sentinel parent
+        stack.push({ node: root, ind: -2 }); 
         stack.push({ node: newNode, ind });
       } else {
         getParent(ind).children.push(newNode);
@@ -336,13 +301,11 @@ function parseASTText(lines) {
       continue;
     }
 
-    // "[key]" section label — skip
     if (/^\[\w+\]/.test(text)) continue;
 
     if (!stack.length) continue;
     const parent = stack[stack.length - 1].node;
 
-    // "  - key: value"
     const propMatch = text.match(/^-\s+(\w+):\s+(.+)/);
     if (propMatch) {
       parent.props[propMatch[1]] = propMatch[2];
@@ -350,7 +313,6 @@ function parseASTText(lines) {
       continue;
     }
 
-    // "  - bare value"
     const bareMatch = text.match(/^-\s+(.+)/);
     if (bareMatch) {
       const label = bareMatch[1];
@@ -366,9 +328,7 @@ function parseASTText(lines) {
   return root;
 }
 
-// ═══════════════════════════════════════════════════════
 // 9. D3 AST RENDERER
-// ═══════════════════════════════════════════════════════
 const NODE_COLORS = {
   Program:        '#7c6af7',
   VarDeclaration: '#56cfb2',
@@ -410,7 +370,6 @@ function renderAST(hierarchyData) {
 
   treeLayout(root);
 
-  // Offset so root is near top-center
   const xs  = root.descendants().map(d => d.x);
   const minX = Math.min(...xs);
   const maxX = Math.max(...xs);
@@ -419,7 +378,6 @@ function renderAST(hierarchyData) {
   const offsetX = W / 2 - (minX + treeWidth / 2);
   const offsetY = 60;
 
-  // Zoom behaviour
   const zoomG = svg.append('g').attr('class', 'zoom-root');
 
   d3Zoom = d3.zoom()
@@ -431,13 +389,11 @@ function renderAST(hierarchyData) {
 
   svg.call(d3Zoom);
 
-  // Initial transform
   const initTransform = d3.zoomIdentity.translate(offsetX, offsetY);
   svg.call(d3Zoom.transform, initTransform);
 
   const g = zoomG;
 
-  // Links (curved paths)
   g.selectAll('.ast-link')
     .data(root.links())
     .enter()
@@ -448,7 +404,6 @@ function renderAST(hierarchyData) {
       .y(d => d.y)
     );
 
-  // Node groups
   const nodeGroup = g.selectAll('.ast-node-group')
     .data(root.descendants())
     .enter()
@@ -456,7 +411,6 @@ function renderAST(hierarchyData) {
     .attr('class', 'ast-node-group')
     .attr('transform', d => `translate(${d.x},${d.y})`);
 
-  // Determine node radius based on type
   function nodeRadius(d) {
     if (d.data.type === 'prop' || d.data.type === 'value') return 18;
     if (d.data.type === 'Program') return 34;
@@ -464,7 +418,6 @@ function renderAST(hierarchyData) {
     return 24;
   }
 
-  // Outer glow ring for important nodes
   nodeGroup.filter(d => !['prop','value'].includes(d.data.type))
     .append('circle')
     .attr('r', d => nodeRadius(d) + 6)
@@ -473,13 +426,11 @@ function renderAST(hierarchyData) {
     .attr('stroke-width', 0.7)
     .attr('opacity', 0.25);
 
-  // Main circle
   nodeGroup.append('circle')
     .attr('class', 'ast-node-circle')
     .attr('r', d => nodeRadius(d))
     .attr('fill', d => {
       const col = getNodeColor(d.data.type);
-      // Leaf nodes get dimmer fill
       return d.data.type === 'prop' || d.data.type === 'value'
         ? col + '30'
         : col + '22';
@@ -487,7 +438,6 @@ function renderAST(hierarchyData) {
     .attr('stroke', d => getNodeColor(d.data.type))
     .attr('stroke-width', d => d.data.type === 'Program' ? 2.5 : 1.8);
 
-  // Node label (type)
   nodeGroup.append('text')
     .attr('class', 'ast-label')
     .attr('dy', d => {
@@ -496,12 +446,10 @@ function renderAST(hierarchyData) {
     })
     .text(d => {
       const n = d.data.name || d.data.type;
-      // Truncate long strings
       return n.length > 12 ? n.slice(0, 11) + '…' : n;
     })
     .attr('fill', d => getNodeColor(d.data.type));
 
-  // Sub-label for prop nodes (show value)
   nodeGroup.filter(d => d.data.type === 'prop')
     .append('text')
     .attr('class', 'ast-sublabel')
@@ -524,7 +472,7 @@ function renderAST(hierarchyData) {
       const rect = wrapper.getBoundingClientRect();
       let x = event.clientX - rect.left + 14;
       let y = event.clientY - rect.top + 14;
-      // Keep within wrapper
+
       if (x + 240 > wrapper.clientWidth)  x = event.clientX - rect.left - 250;
       if (y + 80  > wrapper.clientHeight) y = event.clientY - rect.top  - 70;
       astTooltip.style.left = x + 'px';
@@ -533,9 +481,7 @@ function renderAST(hierarchyData) {
     .on('mouseleave', () => { astTooltip.hidden = true; });
 }
 
-// ═══════════════════════════════════════════════════════
 // 10. ZOOM CONTROLS
-// ═══════════════════════════════════════════════════════
 btnZoomIn.addEventListener('click', () => {
   if (!d3Zoom) return;
   d3.select('#ast-svg').transition().call(d3Zoom.scaleBy, 1.3);
@@ -554,9 +500,7 @@ btnZoomReset.addEventListener('click', () => {
   );
 });
 
-// ═══════════════════════════════════════════════════════
 // 11. RUN / STOP
-// ═══════════════════════════════════════════════════════
 async function startRun() {
   // Reset UI
   logOutput.innerHTML = '';
@@ -649,9 +593,7 @@ btnClearLogs.addEventListener('click', () => {
   logOutput.innerHTML = `<div class="log-placeholder"><p>Log cleared.</p></div>`;
 });
 
-// ═══════════════════════════════════════════════════════
 // 12. GAME INPUT
-// ═══════════════════════════════════════════════════════
 async function sendInput() {
   const val = gameInput.value.trim();
   if (!val) return;
