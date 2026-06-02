@@ -49,7 +49,6 @@ class Optimizer:
         else:
             print("  [+] Dead Code Elimination: No dead scenes found.")
 
-
         # OPTIMIZATION 2: PEEPHOLE OPTIMIZATION
         def merge_prints(statements):
             optimized_stmts = []
