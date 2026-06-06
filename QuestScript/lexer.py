@@ -32,6 +32,7 @@ class Token:
 
     def __repr__(self):
         return f"Token({self.type}, {repr(self.value)}, Line: {self.line}, Col: {self.column})"
+
 def tokenize(code):
     line_num = 1
     line_start = 0
