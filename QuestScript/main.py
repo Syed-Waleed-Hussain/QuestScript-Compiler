@@ -37,7 +37,6 @@ def main():
     try:
         with open(filename, 'r') as file:
             code = file.read()
-        
         print(f"--- Compiling: {filename} ---")
         
         tokens = tokenize(code)
